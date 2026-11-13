@@ -1,0 +1,70 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background: #edf2f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    width: 320px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: #1e293b;
+}
+
+.led {
+    width: 70px;
+    height: 70px;
+    background: #64748b;
+    border-radius: 50%;
+    margin: 30px auto;
+    transition: 0.3s;
+}
+
+.led.on {
+    background: #22c55e;
+    box-shadow: 0 0 25px #22c55e;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+button {
+    padding: 14px 30px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.btn-on {
+    background: #16a34a;
+}
+
+.btn-off {
+    background: #dc2626;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+#message {
+    color: #64748b;
+    margin-top: 25px;
+}
