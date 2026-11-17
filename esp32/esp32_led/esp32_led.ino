@@ -1,12 +1,14 @@
 
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <WiFiClientSecure.h>
 
 // Configuration Wi-Fi
 #include "secrets.h"
 
-// Adresse du serveur Node.js
-const char* serverURL = "http://192.168.1.16:3000/api/led";
+// Adresse publique du serveur Render
+const char* serverURL =
+  "https://esp32-cloud-led.onrender.com/api/led";
 
 #define LED_PIN 2
 
@@ -34,33 +36,40 @@ void loop() {
 
   if (WiFi.status() == WL_CONNECTED) {
 
+    WiFiClientSecure client;
+    client.setInsecure(); // Test uniquement
+
     HTTPClient http;
 
-    http.begin(serverURL);
+    if (http.begin(client, serverURL)) {
 
-    int httpCode = http.GET();
-    Serial.print("Code HTTP : ");
-    Serial.println(httpCode);
+      int httpCode = http.GET();
 
-    if (httpCode == 200) {
+      Serial.print("Code HTTP : ");
+      Serial.println(httpCode);
 
-      String response = http.getString();
+      if (httpCode == 200) {
 
-      Serial.println(response);
+        String response = http.getString();
 
-      if (response.indexOf("\"ON\"") != -1) {
-        digitalWrite(LED_PIN, HIGH);
+        Serial.println(response);
+
+        if (response.indexOf("\"ON\"") != -1) {
+          digitalWrite(LED_PIN, HIGH);
+        }
+        else if (response.indexOf("\"OFF\"") != -1) {
+          digitalWrite(LED_PIN, LOW);
+        }
+
+      } else {
+        Serial.println(http.errorToString(httpCode));
       }
-      else if (response.indexOf("\"OFF\"") != -1) {
-        digitalWrite(LED_PIN, LOW);
-      }
+
+      http.end();
 
     } else {
-      Serial.print("Erreur HTTP : ");
-      Serial.println(httpCode);
+      Serial.println("Impossible de demarrer la connexion HTTP");
     }
-
-    http.end();
   }
 
   delay(1000);
